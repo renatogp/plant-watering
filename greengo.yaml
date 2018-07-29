@@ -1,0 +1,72 @@
+# Greeengrass Group definition file
+Group:
+  name: PlantWatering
+Cores:
+  - name: PlantWatering_core
+    key_path: ./certs
+    config_path: ./config
+    SyncShadow: True
+
+Lambdas:
+  - name: WaterRelease
+    handler: handler.release_water
+    package: lambdas/WaterPumpControl
+    alias: dev
+    greengrassConfig:
+      MemorySize: 128000 # kb
+      Timeout: 60 # seconds
+      Pinned: False
+      Environment:
+        AccessSysfs: True
+        ResourceAccessPolicies:
+          - ResourceId: RaspberryGPIO
+            Permission: 'rw'
+  - name: DeviceBoot
+    handler: pinned.handler
+    package: lambdas/WaterPumpControl
+    alias: dev
+    greengrassConfig:
+      MemorySize: 128000 # kb
+      Timeout: 300 # seconds
+      Pinned: True
+      Environment:
+        AccessSysfs: True
+        ResourceAccessPolicies:
+          - ResourceId: RaspberryGPIO
+            Permission: 'rw'
+          - ResourceId: DataFolder
+            Permission: 'rw'
+
+Subscriptions:
+  - Source: GGShadowService
+    Subject: '$aws/things/PlantWatering_core/shadow/get/#'
+    Target: cloud
+  - Source: GGShadowService
+    Subject: '$aws/things/PlantWatering_core/shadow/update/#'
+    Target: cloud
+  - Source: cloud
+    Subject: '$aws/things/PlantWatering_core/shadow/get/#'
+    Target: GGShadowService
+  - Source: cloud
+    Subject: '$aws/things/PlantWatering_core/shadow/update/#'
+    Target: GGShadowService
+  - Source: cloud
+    Subject: 'PlantWatering/WaterRelease'
+    Target: Lambda::WaterRelease
+
+
+# Resource as defined at http://boto3.readthedocs.io/en/latest/reference/services/greengrass.html#Greengrass.Client.create_resource_definition_version
+Resources:
+  - Name: RaspberryGPIO
+    Id: RaspberryGPIO
+    LocalDeviceResourceData:
+      SourcePath: /dev/gpiomem
+      GroupOwnerSetting:
+        AutoAddGroupOwner: True
+  - Name: DataFolder
+    Id: DataFolder
+    LocalVolumeResourceData:
+      SourcePath: /home/ggc_user/
+      DestinationPath: /home/ggc_user/
+      GroupOwnerSetting:
+        AutoAddGroupOwner: True

@@ -57,10 +57,6 @@ Then start Greengrass Core:
 
 You should receive a confirmation message with the running PID for Greengrass Core service.
 
-Before deploying the application to the device, install project dependencies on RPi:
-
-    pip install python-dateutil
-
 
 #### GPIO/USB connections
 

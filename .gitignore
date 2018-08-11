@@ -4,6 +4,7 @@ certs/
 config/
 
 .idea
+.vscode
 
 .DS_Store
 

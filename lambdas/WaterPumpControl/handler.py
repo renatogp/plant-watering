@@ -2,7 +2,7 @@ import sys
 import os
 import logging
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), './vendored/'))
 
 import greengrasssdk
 from water_pump import WaterPumpControl
@@ -11,7 +11,9 @@ from water_pump import WaterPumpControl
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+
 logger.info('Initializing WaterPumpControl/handler')
+
 
 def release_water(event, context):
     """

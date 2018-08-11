@@ -94,3 +94,6 @@ Using the AWS CLI, check that an appropriate service role is associated with you
 
     aws greengrass associate-service-role-to-account --role-arn YOUR_GG_ROLE_ARN
 
+### PiCamera on RPi /dev/video0
+
+    sudo modprobe bcm2835-v4l2

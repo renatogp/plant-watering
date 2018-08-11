@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'vendored/'))
 
 import json
 import logging
@@ -49,6 +49,7 @@ def device_boot():
     it should turn off the pump after being restarted.
     """
     logger.info('Turning pump off after device start')
+    
     pump = WaterPumpControl()
     pump.off()
 
@@ -78,7 +79,7 @@ def device_boot():
 
 device_boot()
 
-def handler(event, context):
+def pinned_handler(event, context):
     """
     Mock function for pinned/long-lived Lambda
     """

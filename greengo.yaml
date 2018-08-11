@@ -22,7 +22,7 @@ Lambdas:
           - ResourceId: RaspberryGPIO
             Permission: 'rw'
   - name: DeviceBoot
-    handler: pinned.handler
+    handler: pinned.pinned_handler
     package: lambdas/WaterPumpControl
     alias: dev
     greengrassConfig:
@@ -35,6 +35,21 @@ Lambdas:
           - ResourceId: RaspberryGPIO
             Permission: 'rw'
           - ResourceId: DataFolder
+            Permission: 'rw'
+  - name: Camera
+    handler: pinned.pinned_handler
+    package: lambdas/Camera
+    alias: dev
+    greengrassConfig:
+      MemorySize: 128000 # kb
+      Timeout: 30 # seconds
+      Pinned: True
+      Environment:
+        AccessSysfs: True
+        ResourceAccessPolicies:
+          - ResourceId: PiCamera
+            Permission: 'rw'
+          - ResourceId: PiCamera2
             Permission: 'rw'
 
 Subscriptions:
@@ -68,5 +83,17 @@ Resources:
     LocalVolumeResourceData:
       SourcePath: /home/ggc_user/
       DestinationPath: /home/ggc_user/
+      GroupOwnerSetting:
+        AutoAddGroupOwner: True
+  - Name: PiCamera
+    Id: PiCamera
+    LocalDeviceResourceData:
+      SourcePath: /dev/vcsm
+      GroupOwnerSetting:
+        AutoAddGroupOwner: True
+  - Name: PiCamera2
+    Id: PiCamera2
+    LocalDeviceResourceData:
+      SourcePath: /dev/vchiq
       GroupOwnerSetting:
         AutoAddGroupOwner: True
